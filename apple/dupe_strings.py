@@ -28,7 +28,8 @@ for idx, line in enumerate(lines):
     val = m.group('val')
     if not key              : continue # still bad
     if key in data: # dupe
-        print(f'Dupe: "{key}" line {idx} dupes line {data[key]["idx"]}')
+        key_pad = ' ' * max( 0, 32 - len( key ) )
+        print(f'Dupe: "{key}"{key_pad} line {idx: 5} dupes line {data[key]["idx"]: 5}')
         continue
     data[key] = {
         'idx' : idx,
