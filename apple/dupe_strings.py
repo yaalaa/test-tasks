@@ -29,7 +29,7 @@ for idx, line in enumerate(lines):
     if not key              : continue # still bad
     if key in data: # dupe
         key_pad = ' ' * max( 0, 32 - len( key ) )
-        print(f'Dupe: "{key}"{key_pad} line {idx: 5} dupes line {data[key]["idx"]: 5}')
+        print(f'Dupe: "{key}"{key_pad} line {idx + 1: 5} dupes line {data[key]["idx"] + 1: 5}')
         continue
     data[key] = {
         'idx' : idx,
