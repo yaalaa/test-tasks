@@ -39,7 +39,7 @@ for idx, line in enumerate(lines):
     key_caseless = key.casefold()
     if key_caseless in data_caseless:
         key_pad = ' ' * max( 0, 32 - len( key_caseless ) )
-        print(f'Dupe: "{key_caseless}"{key_pad} line {idx + 1: 5} dupes caseless line {data_caseless[key_caseless]["idx"] + 1: 5}')
+        print(f'Dupe: "{key_caseless}"{key_pad} line {idx + 1: 5} dupes caseless line {data_caseless[key_caseless]["idx"] + 1: 5} "{data_caseless[key_caseless]["val"]}"')
         continue
     data_caseless[key_caseless] = {
         'idx' : idx,
