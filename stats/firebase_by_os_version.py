@@ -127,7 +127,11 @@ for key in sorted( data.keys() ):
     total    = sums[ key ]
     writer.writerow( ( key, ) )
     writer.writerow( ( COL_OS_VERSION, COL_USERS, COL_PERCENT ) )
-    for os_v in sorted( data_key.keys() ):
+    keys_to_sort = {
+        key : tuple( int( p ) for p in key.split( VER_SEP ) )
+        for key in data_key.keys()
+    }
+    for os_v in sorted( data_key.keys(), key = lambda k: keys_to_sort[ k ] ):
         val     = data_key[ os_v ]
         percent = val * 100 / total
         writer.writerow( ( os_v, f'{val}', f'{percent: 2.2f}' ) )
