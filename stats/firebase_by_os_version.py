@@ -28,6 +28,7 @@ VER_SEP        = '.'
 COL_DEVICE     = 'Device model'
 COL_OS_VERSION = 'OS with version'
 COL_USERS      = 'Users'
+COL_PERCENT    = '%'
 MARKER         = (
     COL_DEVICE,
     COL_OS_VERSION,
@@ -109,6 +110,11 @@ if not data: # nothing fount
     print('Error: no data was found')
     exit(1)
 
+sums = {
+    key : sum( data_key.values() )
+    for key, data_key in data.items()
+}
+
 pad_key = False
 writer  = csv.writer( sys.stdout )
 for key in sorted( data.keys() ):
@@ -118,8 +124,11 @@ for key in sorted( data.keys() ):
     else:
         pad_key = True
     data_key = data[ key ]
+    total    = sums[ key ]
     writer.writerow( ( key, ) )
-    writer.writerow( ( COL_OS_VERSION, COL_USERS ) )
+    writer.writerow( ( COL_OS_VERSION, COL_USERS, COL_PERCENT ) )
     for os_v in sorted( data_key.keys() ):
-        writer.writerow( ( os_v, f'{data_key[ os_v ]}' ) )
+        val     = data_key[ os_v ]
+        percent = val * 100 / total
+        writer.writerow( ( os_v, f'{val}', f'{percent: 2.2f}' ) )
 
