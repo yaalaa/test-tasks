@@ -1,7 +1,6 @@
 #!/bin/bash
 # be sure to make it executable - like
 #   chmod u+x do_apply_patch.sh
-# edit parameters section
 # then just go to repo folder and run this script
 
 # parameters
@@ -27,13 +26,21 @@ else
 fi
 S_ERR="${_RC}Error"
 
+# thanks to
+# https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
 # dump current path
 echo -e "${_BC}Current directory: $(pwd)${_NC}"
 
 # check patch directory exists
 if [ "${MY_PATCH_DIR}" == "" ]; then
-  echo -e "${S_ERR}:patch directory is not specified${_NC}"
-  exit 1
+  if [ "${SCRIPTPATH}" == "" ]; then
+    echo -e "${S_ERR}:patch directory is not specified${_NC}"
+    exit 1
+  fi
+  # let's use SCRIPTPATH
+  MY_PATCH_DIR=${SCRIPTPATH}
 fi
 if [ ! -d "${MY_PATCH_DIR}" ]; then
   echo -e "${S_ERR}: patch directory does not exist - ${MY_PATCH_DIR}${_NC}"
@@ -49,7 +56,7 @@ for filename in ${MY_PATCH_DIR}/*${MY_PATCH_EXT}; do
   fi
 done
 if [ "${MY_HAVE_PATCH_FILES}" -eq "0" ]; then
-  echo -e "${S_ERR}: patch directory does not have any patch file (*${MY_PATCH_EXT}) - ${MY_PATCH_DIR}${_NC}"
+  echo -e "${S_ERR}: patch directory contains no patch file (*${MY_PATCH_EXT}) - ${MY_PATCH_DIR}${_NC}"
   exit 1
 fi
 
