@@ -6,6 +6,7 @@ MY_FIRST_REV_IN=$1
 # hard parameters
 MY_VERSION_RE='^\*Version\s+[0-9]+\.[0-9]+(\.[0-9]+)?'
 MY_ONLY_MASK='^\*'
+MY_TICKET_MASK='[*[:space:]]([a-zA-Z]+-[0-9]+)[,[:space:]]'
 
 # check it's git repo
 _=$(git rev-parse --show-toplevel 2>&1)
@@ -69,5 +70,29 @@ if [[ "${MY_ONLY_MASK}" == "" ]]; then
   MY_ONLY_MASK='.'
 fi
 
-git log --format='%s' --extended-regexp --grep=${MY_ONLY_MASK} ${MY_NEXT_VERSION_REV}..${MY_FIRST_REV_HASH}
+# get log
+MY_LOG=$(git log --format='%s' --extended-regexp --grep=${MY_ONLY_MASK} ${MY_NEXT_VERSION_REV}..${MY_FIRST_REV_HASH} 2>&1)
+if [ "$?" -ne "0" ]; then
+  echo "Error: cannot git log"
+  exit 1
+fi
 
+# get tickets
+MY_TICKETS_TMP=()
+MY_LOG_TMP="${MY_LOG}"
+while [[ "${MY_LOG_TMP}" =~ ${MY_TICKET_MASK} ]]; do
+  MY_TICKETS_TMP+=(${BASH_REMATCH[1]})
+  MY_LOG_TMP=${MY_LOG_TMP/"${BASH_REMATCH[0]}"/ }
+done
+IFS=$'\n'; MY_TICKETS=($(sort -uV <<<"${MY_TICKETS_TMP[*]}")); unset IFS
+if [[ "${#MY_TICKETS[@]}" -gt 1 ]]; then
+  MY_TICKETS_LIST="${MY_TICKETS[0]}$(printf ", %s" "${MY_TICKETS[@]:1}")"
+else
+  MY_TICKETS_LIST="${#MY_TICKETS[*]}"
+fi
+if [[ "${#MY_TICKETS[@]}" -gt 0 ]]; then
+  printf "Tickets\n----\n${MY_TICKETS_LIST}\n\nTL;DR\n----\n"
+fi
+
+# dump log
+echo "${MY_LOG}"
