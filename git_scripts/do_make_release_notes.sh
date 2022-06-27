@@ -94,7 +94,7 @@ IFS=$'\n'; MY_TICKETS=($(sort -uV <<<"${MY_TICKETS_TMP[*]}")); unset IFS
 if [[ "${#MY_TICKETS[@]}" -gt 1 ]]; then
   MY_TICKETS_LIST="${MY_TICKETS[0]}$(printf ", %s" "${MY_TICKETS[@]:1}")"
 else
-  MY_TICKETS_LIST="${#MY_TICKETS[*]}"
+  MY_TICKETS_LIST="${MY_TICKETS[*]}"
 fi
 if [[ "${#MY_TICKETS[@]}" -gt 0 ]]; then
   printf "Tickets\n----\n${MY_TICKETS_LIST}\n\nTL;DR\n----\n"
