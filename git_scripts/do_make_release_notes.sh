@@ -4,7 +4,8 @@
 MY_FIRST_REV_IN=$1
 
 # hard parameters
-MY_VERSION_RE='^\*\s*Version\s+(=\s+)?[0-9]+\.[0-9]+(\.[0-9]+)?'
+#MY_VERSION_RE='^\*\s*Version\s+(=\s+)?[0-9]+\.[0-9]+(\.[0-9]+)?'
+MY_VERSION_RE='^\* *Version +(= +)?[0-9]+\.[0-9]+(\.[0-9]+)?'
 MY_VERSION_RE_CASE_SENSITIVE=no#yes
 MY_ONLY_MASK='^\*'
 MY_TICKET_MASK='[*[:space:]]([a-zA-Z]+-[0-9]+)[,[:space:]]'
@@ -44,7 +45,7 @@ if [[ "${MY_VERSION_RE_CASE_SENSITIVE}" == "yes" ]]; then
 else
   MY_REVLIST_RE_CASE_SENSITIVE=" --regexp-ignore-case"
 fi
-MY_VERSION_REVS_OUT=($(git rev-list ${MY_FIRST_REV_HASH}${MY_REVLIST_RE_CASE_SENSITIVE} --extended-regexp --grep=${MY_VERSION_RE} -n2 2>&1))
+MY_VERSION_REVS_OUT=($(git rev-list ${MY_FIRST_REV_HASH}${MY_REVLIST_RE_CASE_SENSITIVE} --extended-regexp --grep="${MY_VERSION_RE}" -n2 2>&1))
 if [ "$?" -ne "0" ]; then
   echo "Error: cannot parse revisions"
   exit 1
