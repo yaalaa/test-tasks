@@ -35,11 +35,7 @@ def calc_beauty( heights, start : Value = None ):
 def look_up( heights ) -> Value:
     cnt  = len( heights )
     best = Value()
-    cur  = Value(
-        idx    = 0,
-        horz   = 0,
-        beauty = 0,
-    )
+    cur  = Value()
     while cur.idx < cnt:
         house = heights[ cur.idx ]
         if house > cur.horz:
@@ -53,8 +49,7 @@ def look_up( heights ) -> Value:
                         beauty = cur.beauty,
                     )
                 )
-                if tweaked.beauty > best.beauty:
-                    best = tweaked
+                if tweaked.beauty > best.beauty: best = tweaked
             cur.horz    = house
         cur.idx += 1
     if cur.beauty > best.beauty : best = cur
