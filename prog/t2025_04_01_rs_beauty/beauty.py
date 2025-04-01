@@ -10,9 +10,9 @@ h = [ int( s.strip() ) for s in input().split() ]
 if n != len( h ):
     print( f'n differs from actual array length' )
     exit( -1 )
-print( f'Input:')
-print( f'{n=}' )
-print( f'{h=}' )
+# print( f'Input:')
+# print( f'{n=}' )
+# print( f'{h=}' )
 
 # too few RAM
 @dataclasses.dataclass()
@@ -36,18 +36,22 @@ def look_up( heights ) -> Value:
     cnt  = len( heights )
     best = Value()
     cur  = Value(
-        idx    = 1,
-        horz   = h[ 0 ],
-        beauty = 1,
+        idx    = 0,
+        horz   = 0,
+        beauty = 0,
     )
     while cur.idx < cnt:
-        house = h[ cur.idx ]
+        house = heights[ cur.idx ]
         if house > cur.horz:
             cur.beauty += 1
             if house > cur.horz + 1:
                 tweaked = calc_beauty(
                     heights,
-                    start = dataclasses.replace( cur, idx = cur.idx + 1, horz = cur.horz + 1 )
+                    start = Value(
+                        idx    = cur.idx  + 1,
+                        horz   = cur.horz + 1,
+                        beauty = cur.beauty,
+                    )
                 )
                 if tweaked.beauty > best.beauty:
                     best = tweaked
@@ -56,15 +60,15 @@ def look_up( heights ) -> Value:
     if cur.beauty > best.beauty : best = cur
     return best
 
-initial_beauty = calc_beauty( h ).beauty
-print( f'\nInitial beauty: {initial_beauty}' )
+#initial_beauty = calc_beauty( h ).beauty
+# print( f'\nInitial beauty: {initial_beauty}' )
 
 if n <= 1:
-    print( f'Beauty is enough' )
-    print( f'{initial_beauty}' )
+    # print( f'Beauty is enough' )
+    print( f'{calc_beauty( h ).beauty}' )
     exit( 0 )
 
-most_beauty = look_up( h )
+most_beauty = look_up( h ).beauty
 
-print( f'Most beauty' )
-print( f'{most_beauty.beauty}' )
+# print( f'Most beauty' )
+print( f'{most_beauty}' )
