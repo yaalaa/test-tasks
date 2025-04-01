@@ -14,6 +14,24 @@ if n != len( h ):
 # print( f'{n=}' )
 # print( f'{h=}' )
 
+# reduce
+def reduce_heights( heights ):
+    cnt       = len( heights )
+    if cnt <= 1: return heights
+    threshold = 0
+    horz      = 0
+    out       = []
+    idx       = 0
+    while idx < cnt:
+        house = heights[ idx ]
+        if house > threshold:
+            out.append( house )
+        if house >= horz:
+            threshold = horz
+            horz      = house
+        idx += 1
+    return out
+
 # too few RAM
 @dataclasses.dataclass()
 class Value:
@@ -63,7 +81,7 @@ if n <= 1:
     print( f'{calc_beauty( h ).beauty}' )
     exit( 0 )
 
-most_beauty = look_up( h ).beauty
+most_beauty = look_up( reduce_heights( h ) ).beauty
 
 # print( f'Most beauty' )
 print( f'{most_beauty}' )
