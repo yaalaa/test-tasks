@@ -18,19 +18,16 @@ if n != len( h ):
 def reduce_heights( heights ):
     cnt       = len( heights )
     if cnt <= 1: return heights
-    threshold = 0
-    horz      = 0
-    out       = []
-    idx       = 0
-    while idx < cnt:
-        house = heights[ idx ]
-        if house > threshold:
-            out.append( house )
-        if house >= horz:
-            threshold = horz
-            horz      = house
-        idx += 1
-    return out
+    ordered   = sorted( enumerate( heights ), key = lambda it: it[ 1 ] )
+    dense     = [ 0 ] * cnt
+    val       = 0
+    prev      = 0
+    for idx, old_val in ordered:
+        if old_val > prev:
+            prev = old_val
+            val += 1
+        dense[ idx ] = val
+    return dense
 
 # too few RAM
 @dataclasses.dataclass()
@@ -79,7 +76,7 @@ def look_up( heights ) -> Value:
 
 if n <= 1:
     # print( f'Beauty is enough' )
-    print( f'{calc_beauty( h ).beauty}' )
+    print( f'{calc_beauty( reduce_heights( h ) ).beauty}' )
     exit( 0 )
 
 most_beauty = look_up( h ).beauty
