@@ -64,7 +64,7 @@ def calc_beauty( heights, start : Value = None, memory : list[ Node ] = None ) -
                 for mem_idx in range( start.idx if start else 0, cur.idx ):
                     memory[ mem_idx ].set_mem( out )
                 return out
-            node.setup( cur.horz, cur.beauty)
+            node.setup( cur.horz, cur.beauty )
         house = heights[ cur.idx ]
         if house > cur.horz:
             cur.beauty += 1
@@ -72,13 +72,12 @@ def calc_beauty( heights, start : Value = None, memory : list[ Node ] = None ) -
         cur.idx += 1
     out = cur.beauty
     if memory:
-        for mem_idx in range( start.idx if start else 0, cnt ) :
+        for mem_idx in range( start.idx if start else 0, cnt ):
             memory[ mem_idx ].set_mem( out )
     return out
 
 def look_up( heights ) -> int:
     cnt    = len( heights )
-    max_h  = max( heights )
     memory = [ Node() for _ in range( cnt ) ]
     best   = 0
     cur    = Value()
