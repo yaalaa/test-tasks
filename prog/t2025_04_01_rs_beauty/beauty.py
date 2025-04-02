@@ -83,7 +83,9 @@ def look_up( heights ) -> int:
     cur    = Value()
     while cur.idx < cnt:
         house = heights[ cur.idx ]
-        if house != cur.horz + 1:
+        while True:
+            if house == cur.horz + 1: break
+            if cur.idx >= 2 and heights[ cur.idx ] <= heights[ cur.idx - 1 ] <= heights[ cur.idx - 2 ]: break
             tweaked = calc_beauty(
                 heights,
                 start = Value(
@@ -94,7 +96,7 @@ def look_up( heights ) -> int:
                 memory = memory,
             )
             if tweaked > best: best = tweaked
-
+            break
         if house > cur.horz:
             cur.beauty += 1
             cur.horz    = house
