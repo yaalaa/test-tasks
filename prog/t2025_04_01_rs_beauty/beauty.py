@@ -88,7 +88,6 @@ def look_up( heights ) -> int:
         while True:
             if house == cur.horz + 1: break
             if cur.idx >= 2 and house <= horzes [ cur.idx - 2 ] and heights[ cur.idx - 1 ] <= horzes[ cur.idx - 2 ]: break
-            if cur.idx >= 2 and house <= heights[ cur.idx - 1 ] <= heights[ cur.idx - 2 ]: break
             tweaked = calc_beauty(
                 heights,
                 start = Value(
