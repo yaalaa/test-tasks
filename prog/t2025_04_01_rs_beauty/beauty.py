@@ -70,7 +70,11 @@ def calc_beauty( heights, start : Value = None, memory : list[ Node ] = None ) -
             cur.beauty += 1
             cur.horz    = house
         cur.idx += 1
-    return cur.beauty
+    out = cur.beauty
+    if memory:
+        for mem_idx in range( start.idx if start else 0, cnt ) :
+            memory[ mem_idx ].set_mem( out )
+    return out
 
 def look_up( heights ) -> int:
     cnt    = len( heights )
