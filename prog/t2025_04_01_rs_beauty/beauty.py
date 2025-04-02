@@ -79,13 +79,16 @@ def calc_beauty( heights, start : Value = None, memory : list[ Node ] = None ) -
 def look_up( heights ) -> int:
     cnt    = len( heights )
     memory = [ Node() for _ in range( cnt ) ]
+    horzes = [ 0      for _ in range( cnt ) ]
     best   = 0
     cur    = Value()
     while cur.idx < cnt:
-        house = heights[ cur.idx ]
+        horzes[ cur.idx ] = cur.horz
+        house             = heights[ cur.idx ]
         while True:
             if house == cur.horz + 1: break
-            if cur.idx >= 2 and heights[ cur.idx ] <= heights[ cur.idx - 1 ] <= heights[ cur.idx - 2 ]: break
+            if cur.idx >= 2 and house <= horzes [ cur.idx - 2 ] and heights[ cur.idx - 1 ] <= horzes[ cur.idx - 2 ]: break
+            if cur.idx >= 2 and house <= heights[ cur.idx - 1 ] <= heights[ cur.idx - 2 ]: break
             tweaked = calc_beauty(
                 heights,
                 start = Value(
