@@ -107,7 +107,7 @@ def look_up( heights ) -> int:
 
 if n <= 1:
     # print( f'Beauty is enough' )
-    print( f'{calc_beauty( reduce_heights( h ) )}' )
+    print( f'{calc_beauty( h )}' )
     exit( 0 )
 
 most_beauty = look_up( h )
