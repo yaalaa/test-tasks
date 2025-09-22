@@ -10,7 +10,6 @@ with io.open( fn ) as f:
 
 num_regex    = r'(?:[1-9]\d*)?[02468]'
 op_regex     = f'[*+]'
-#lookup_regex = f'(?<!\d)(?:{num_regex})(?:(?:{op_regex})(?:{num_regex}))*(?!\d)'
 lookup_regex = f'(?:{num_regex})(?:(?:{op_regex})(?:{num_regex}))*'
 print( f'{lookup_regex}' )
 found = max( ( m.group() for m in regex.finditer( lookup_regex, '+' + data + '+' ) ), key = lambda v: len( v ))
