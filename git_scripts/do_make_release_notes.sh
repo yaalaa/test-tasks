@@ -45,23 +45,38 @@ if [[ "${MY_VERSION_RE_CASE_SENSITIVE}" == "yes" ]]; then
 else
   MY_REVLIST_RE_CASE_SENSITIVE=" --regexp-ignore-case"
 fi
-MY_VERSION_REVS_OUT=($(git rev-list ${MY_FIRST_REV_HASH}${MY_REVLIST_RE_CASE_SENSITIVE} --extended-regexp --grep="${MY_VERSION_RE}" -n2 2>&1))
+MY_PARSE_REV_CNT=10
+MY_VERSION_REVS_OUT=($(git rev-list ${MY_FIRST_REV_HASH}${MY_REVLIST_RE_CASE_SENSITIVE} --extended-regexp --grep="${MY_VERSION_RE}" -n${MY_PARSE_REV_CNT} 2>&1))
 if [ "$?" -ne "0" ]; then
   echo "Error: cannot parse revisions"
   exit 1
 fi
-MY_FISRT_VERSION_REV=no
-MY_NEXT_VERSION_REV=#
-MY_IDX=0
+MY_FIRST_VERSION_TEXT=""
 for MY_VER in "${MY_VERSION_REVS_OUT[@]}"; do
   if [[ "${MY_VER}" == "" ]]; then
-    break
-  fi
-  if [[ "${MY_IDX}" -eq 0 ]] && [[ "${MY_VER}" == "${MY_FIRST_REV_HASH}" ]]; then
-    MY_FISRT_VERSION_REV=yes
-    MY_IDX=$((MY_IDX + 1))
     continue
   fi
+  MY_CUR_REV_TEXT="$(git log --quiet -n1 --decorate=full --format=format:'%s'  ${MY_VER})"
+  if [ "$?" -ne "0" ]; then
+    echo "Error: cannot log ${MY_VER}"
+    exit 1
+  fi
+  if [[ "${MY_CUR_REV_TEXT}" == "" ]]; then
+    echo "Error: cannot log ${MY_VER} - empty commit message"
+    exit 1
+  fi
+  #echo "look - ${MY_VER} - |${MY_CUR_REV_TEXT}| - first - |${MY_FIRST_VERSION_TEXT}|"
+  if [[ "${MY_FIRST_VERSION_TEXT}" == "" ]]; then
+    # first Version commit
+    MY_FIRST_VERSION_TEXT="${MY_CUR_REV_TEXT}"
+    #echo "look - ${MY_VER} - |${MY_CUR_REV_TEXT}| - first"
+    continue
+  elif [[ "${MY_FIRST_VERSION_TEXT}" == "${MY_CUR_REV_TEXT}" ]]; then
+    # repeats first Version - maybe a feature branch
+    #echo "look - ${MY_VER} - |${MY_CUR_REV_TEXT}| - repeat"
+    continue
+  fi
+  #echo "look - ${MY_VER} - |${MY_CUR_REV_TEXT}| - found"
   MY_NEXT_VERSION_REV="${MY_VER}"
   break
 done
@@ -69,7 +84,7 @@ if [[ "${MY_NEXT_VERSION_REV}" == "" ]]; then
   echo "Error: previous version commit was not found"
   exit 1
 fi
-#echo "First: \"${MY_NEXT_VERSION_REV}\""
+#echo "First: \"${MY_FIRST_REV_HASH}\""
 #echo "Next: \"${MY_NEXT_VERSION_REV}\""
 
 # get the log
@@ -78,7 +93,7 @@ if [[ "${MY_ONLY_MASK}" == "" ]]; then
 fi
 
 # get log
-MY_LOG=$(git log --format='%s' --extended-regexp --grep=${MY_ONLY_MASK} ${MY_NEXT_VERSION_REV}..${MY_FIRST_REV_HASH} 2>&1)
+MY_LOG=$(git log --no-merges --format='%s' --extended-regexp --grep=${MY_ONLY_MASK} ${MY_NEXT_VERSION_REV}..${MY_FIRST_REV_HASH} 2>&1)
 if [ "$?" -ne "0" ]; then
   echo "Error: cannot git log"
   exit 1
