@@ -25,8 +25,8 @@ best_len   = -1
 
 for idx in range( len( parts ) - sep_max -1 ):
     cur_len = sum( parts[ idx : idx + sep_max + 1 ] ) + sep_max * sep_len
-    if idx > 0                     : cur_len += 1
-    if idx + sep_max < len( parts ): cur_len += 1
+    if idx > 0                     : cur_len += sep_len - 1
+    if idx + sep_max < len( parts ): cur_len += sep_len - 1
     if cur_len > best_len:
         best_len   = cur_len
         best_start = idx
