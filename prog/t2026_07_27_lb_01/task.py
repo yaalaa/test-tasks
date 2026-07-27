@@ -29,13 +29,13 @@ for ( title, re_expr, corr ) in [
         #( 'A'          , 'A'      ),
         #( 'K'          , 'K'      ),
         #( 'L'          , 'L'      ),
-        #( 'KLTTKL'     , 'KLTTKL' ),
-        ( FN           , s        ),
+        ( 'aaaabbb'    , 'aaaabbb' ),
+        ( FN           , s         ),
     ]:
         ts_start = time.monotonic()
         res       = test( re_expr, test_src )
         if corr: res = corr( res )
         ts_end   = time.monotonic()
-        print( f'{title:10} - {test_name:14} - {res:6} - {ts_end - ts_start:.3f}s' )
+        print( f'{title:10} - {test_name:16} - {res:6} - {ts_end - ts_start:.3f}s' )
 
 print( '.done.' )
