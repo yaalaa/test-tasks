@@ -1,7 +1,17 @@
 """
 python -m tryout.json_align
 """
+from __future__ import annotations
 
+
+def s2jms( s, special_quote = '\u301e' ):
+    def s2js( s : str ): 
+        return ''.join((
+            '"',
+            ( s.replace( '"', special_quote ) if special_quote else s ).replace( '\\', '\\\\' ).replace( '"', '\\"' ),
+            '"',
+        ))
+    return '  ' + '\n+ '.join( s2js( l ) for l in s.splitlines() )
 
 
 def j2s( 
@@ -60,6 +70,11 @@ src = """
 """
 
 import json
+d   = json.loads( src )
+s   = j2s       ( d   )
+mjs = s2jms     ( s   )
 print( f'{'-' * 32}' )
-print( j2s( json.loads( src ) ) )
+print( s )
+print( f'{'-' * 32}' )
+print( mjs )
 print( f'{'-' * 32}' )
