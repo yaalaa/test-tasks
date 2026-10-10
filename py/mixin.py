@@ -2,6 +2,9 @@
 class A:
     def do_something( self, param ):
         print( f'A.do_something: {param=}' )
+    def do_more( self, param1, param2 ):
+        print( f'A.do_more: {param1=} - {param2=}' )
+        self.do_something( param2 )
 
 
 class B( A ):
@@ -22,11 +25,19 @@ class D( Mixin, A ):
 
 
 print( f'{'-' * 16} A {'-' * 16}' )
-A().do_something( 'a' )
+a = A()
+a.do_something( 'a' )
+a.do_more( 'A2', 'A2' )
 print( f'{'-' * 16} B {'-' * 16}' )
-B().do_something( 'b' )
+b = B()
+b.do_something( 'b' )
+b.do_more( 'B2', 'B2' )
 print( f'{'-' * 16} C {'-' * 16}' )
-C().do_something( 'c' )
+c = C()
+c.do_something( 'c' )
+c.do_more( 'C2', 'C2' )
 print( f'{'-' * 16} D {'-' * 16}' )
-D().do_something( 'd' )
+d = D()
+d.do_something( 'd' )
+d.do_more( 'D2', 'D2' )
 print( f'{'-' * 16}---{'-' * 16}' )
